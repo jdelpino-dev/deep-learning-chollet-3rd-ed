@@ -83,7 +83,7 @@ python -c "import keras; print('Keras', keras.__version__)"
 
 Expected output (versions may differ slightly):
 
-```
+```plaintext
 TF 2.20.0
 JAX 0.4.36
 [METAL(id=0)]
@@ -122,7 +122,7 @@ nbstripout --status
 
 Expected output:
 
-```
+```plaintext
 nbstripout is installed in repository '...'
 
 Filter:
@@ -144,7 +144,7 @@ Diff Attributes:
 | ----------------------------- | --------------------------- |
 | Cell outputs (plots, logs)    | Cell source code            |
 | Execution counts              | Markdown cells              |
-| `metadata.kernelspec`         | Cell structure               |
+| `metadata.kernelspec`         | Cell structure              |
 | `metadata.language_info`      | Cell type (code/markdown)   |
 | `metadata.widgets`            |                             |
 | `cell.metadata.scrolled`      |                             |
