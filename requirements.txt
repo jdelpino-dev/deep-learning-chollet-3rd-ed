@@ -1,0 +1,119 @@
+# ==============================================================================
+# Deep Learning with Python (3rd Ed.) — Chollet
+# Mac Apple Silicon (M1/M2/M3/M4) — GPU-accelerated setup
+#
+# Target Python: 3.12.9  (via pyenv)
+#
+#   pyenv install 3.12.9
+#   pyenv virtualenv 3.12.9 dl-chollet-3rd
+#   pyenv local dl-chollet-3rd
+#   pip install --upgrade pip && pip install -r requirements.txt
+#
+# Why Python 3.12?
+#   TensorFlow macOS ARM64 wheels are reliably published for 3.12.
+#   Apple's Metal plugins (tensorflow-metal, jax-metal) follow TF's
+#   platform support, so 3.12 is the most conservative choice that
+#   keeps all three backends (JAX, TF, PyTorch) working with GPU.
+#   Python 3.13+ may work for PyTorch/JAX alone, but TF + Metal
+#   plugin wheel availability is not guaranteed on 3.13/3.14.
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# Keras 3 Ecosystem
+#
+# Default backend in most notebooks: JAX
+# Some cells switch to tensorflow or torch via %%backend magic
+# keras-hub (merger of keras-nlp + keras-cv) provides pretrained models
+# used heavily in chapters 8–18 (Xception, SAM, RetinaNet, Gemma, SD3, etc.)
+# ------------------------------------------------------------------------------
+keras==3.13.2
+keras-hub==0.26.0
+keras-tuner==1.4.8
+
+
+# ------------------------------------------------------------------------------
+# JAX Backend — Apple Silicon GPU
+#
+# IMPORTANT: jax, jaxlib, and jax-metal must be a compatible trio.
+# Apple's jax-metal docs provide a compatibility table mapping
+# jax-metal versions to supported jaxlib versions. Do NOT mix
+# incompatible versions or JAX will silently fall back to CPU.
+#
+# See: https://pypi.org/project/jax-metal/
+# ------------------------------------------------------------------------------
+jax==0.4.36
+jaxlib==0.4.36
+jax-metal==0.1.1
+
+
+# ------------------------------------------------------------------------------
+# TensorFlow Backend — Apple Silicon GPU
+#
+# tensorflow-macos was deprecated in TF 2.16; the standard tensorflow
+# package now ships native ARM64 macOS wheels.
+# tensorflow-metal is the GPU kernel plugin for Metal acceleration.
+#
+# TF is required even when training with JAX, because tf.data pipelines
+# are used for data loading throughout chapters 8–17.
+#
+# TF 2.20 is compiled against NumPy 2.0 by default, so numpy 2.x
+# is the correct companion (no ABI mismatch risk).
+# ------------------------------------------------------------------------------
+tensorflow==2.20.0
+tensorflow-metal==1.2.0
+
+
+# ------------------------------------------------------------------------------
+# PyTorch Backend
+#
+# MPS (Metal Performance Shaders) GPU support is built into torch.
+# No extra plugin required for Apple Silicon GPU acceleration.
+# ------------------------------------------------------------------------------
+torch==2.10.0
+torchvision==0.25.0
+
+
+# ------------------------------------------------------------------------------
+# Numerical & Data Processing
+#
+# NumPy 2.x: TF 2.20, JAX 0.4.36, PyTorch 2.10, and Keras 3.13 all
+# target numpy 2.x in their build/test matrices. Using 2.x ensures
+# consistent binary ABI across all wheels.
+# ------------------------------------------------------------------------------
+numpy==2.4.2
+scipy==1.15.2
+
+
+# ------------------------------------------------------------------------------
+# Visualization & Image Processing
+# ------------------------------------------------------------------------------
+matplotlib==3.10.8
+pillow==12.1.1
+
+
+# ------------------------------------------------------------------------------
+# NLP Utilities
+# regex: used directly in chapter 14 (tokenizer implementations)
+# sentencepiece: required by keras-hub's SentencePieceTokenizer (chapter 16)
+# ------------------------------------------------------------------------------
+regex==2024.11.6
+sentencepiece==0.2.0
+
+
+# ------------------------------------------------------------------------------
+# Kaggle integration
+# Chapters 8, 9, 16 download competition/model data via kagglehub
+# ------------------------------------------------------------------------------
+kagglehub==1.0.0
+
+
+# ------------------------------------------------------------------------------
+# Notebook Environment
+# ------------------------------------------------------------------------------
+jupyter==1.1.1
+jupyterlab==4.5.5
+qtconsole==5.7.1
+PyQt5==5.15.11
+ipython==9.10.0
+ipywidgets==8.1.5
