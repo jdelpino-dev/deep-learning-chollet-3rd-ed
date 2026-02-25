@@ -12,6 +12,12 @@
 #   pip install -r requirements.txt
 #   pip uninstall tensorflow-metal -y   # see "WHY NO tensorflow-metal?" below
 #
+# Strip notebook outputs from git (requires nbstripout via pipx):
+#   pipx install nbstripout              # one-time, global install
+#   nbstripout --install                  # per-repo git filter
+#   git config filter.nbstripout.extrakeys \
+#     'metadata.kernelspec metadata.language_info metadata.widgets cell.metadata.scrolled cell.metadata.collapsed'
+#
 # Recreating the env (if needed):
 #   pyenv virtualenv-delete dl-chollet-3rd -f
 #   pyenv virtualenv 3.12.9 dl-chollet-3rd
