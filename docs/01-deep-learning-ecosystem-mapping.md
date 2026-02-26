@@ -7,33 +7,74 @@
 
 ## Table of Contents
 
-- [Introduction](#introduction)
-- [The Two-Level Model](#the-two-level-model)
-- [Level 1 — Core Tensor + Autodiff Engines](#level-1--core-tensor--autodiff-engines)
-  - [TensorFlow](#tensorflow)
-  - [PyTorch](#pytorch)
-  - [JAX](#jax)
-- [Level 2 — High-Level Modeling and Training Interfaces](#level-2--high-level-modeling-and-training-interfaces)
-  - [TensorFlow Ecosystem (tf.keras)](#tensorflow-ecosystem-tfkeras)
-  - [PyTorch Ecosystem (torch.nn + Community)](#pytorch-ecosystem-torchnn--community)
-    - [torch.nn / nn.Module — The Core Abstraction](#torchnn--nnmodule--the-core-abstraction)
-    - [PyTorch Lightning / Fabric](#pytorch-lightning--fabric)
-    - [Hugging Face Trainer / Accelerate](#hugging-face-trainer--accelerate)
-    - [fastai](#fastai)
-    - [Other PyTorch Ecosystem Libraries](#other-pytorch-ecosystem-libraries)
-  - [JAX Ecosystem (Flax / Haiku / Equinox + Optax)](#jax-ecosystem-flax--haiku--equinox--optax)
-    - [Flax](#flax)
-    - [Haiku](#haiku)
-    - [Equinox](#equinox)
-    - [Optax](#optax)
-  - [Keras 3 — The Multi-Backend API](#keras-3--the-multi-backend-api)
-- [How the Levels Articulate](#how-the-levels-articulate)
-  - [The Vertical Relationship](#the-vertical-relationship)
-  - [Cross-Framework Bridges](#cross-framework-bridges)
-  - [The Spectrum of Control](#the-spectrum-of-control)
-- [Ecosystem Comparison Matrix](#ecosystem-comparison-matrix)
-- [Choosing the Right Stack](#choosing-the-right-stack)
-- [Glossary](#glossary)
+- [Deep Learning Ecosystem Mapping: A Two-Level Architecture](#deep-learning-ecosystem-mapping-a-two-level-architecture)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [The Two-Level Model](#the-two-level-model)
+  - [Level 1 — Core Tensor + Autodiff Engines](#level-1--core-tensor--autodiff-engines)
+    - [TensorFlow](#tensorflow)
+    - [PyTorch](#pytorch)
+    - [JAX](#jax)
+      - [How JAX transforms work: tracing and jaxprs](#how-jax-transforms-work-tracing-and-jaxprs)
+      - [Pure functions and explicit state](#pure-functions-and-explicit-state)
+      - [Composability: the key differentiator](#composability-the-key-differentiator)
+  - [Level 2 — High-Level Modeling and Training Interfaces](#level-2--high-level-modeling-and-training-interfaces)
+    - [TensorFlow Ecosystem (tf.keras)](#tensorflow-ecosystem-tfkeras)
+    - [PyTorch Ecosystem (torch.nn + Community)](#pytorch-ecosystem-torchnn--community)
+      - [torch.nn / nn.Module — The Core Abstraction](#torchnn--nnmodule--the-core-abstraction)
+      - [PyTorch Lightning / Fabric](#pytorch-lightning--fabric)
+      - [Hugging Face Trainer / Accelerate](#hugging-face-trainer--accelerate)
+      - [fastai](#fastai)
+      - [Other PyTorch Ecosystem Libraries](#other-pytorch-ecosystem-libraries)
+    - [JAX Ecosystem (Flax / Haiku / Equinox + Optax)](#jax-ecosystem-flax--haiku--equinox--optax)
+      - [Flax](#flax)
+      - [Haiku](#haiku)
+      - [Equinox](#equinox)
+      - [Optax](#optax)
+    - [Keras 3 — The Multi-Backend API](#keras-3--the-multi-backend-api)
+      - [Key Capabilities](#key-capabilities)
+      - [Progressive Disclosure of Complexity](#progressive-disclosure-of-complexity)
+      - [Relationship to tf.keras](#relationship-to-tfkeras)
+  - [How the Levels Articulate](#how-the-levels-articulate)
+    - [The Vertical Relationship](#the-vertical-relationship)
+    - [Cross-Framework Bridges](#cross-framework-bridges)
+    - [The Spectrum of Control](#the-spectrum-of-control)
+  - [Ecosystem Comparison Matrix](#ecosystem-comparison-matrix)
+  - [Choosing the Right Stack](#choosing-the-right-stack)
+  - [Glossary](#glossary)
+    - [Autodiff](#autodiff)
+    - [Autograd](#autograd)
+    - [Backpropagation](#backpropagation)
+    - [Callback](#callback)
+    - [Computation Graph](#computation-graph)
+    - [DataLoader](#dataloader)
+    - [DeepSpeed](#deepspeed)
+    - [Eager Execution](#eager-execution)
+    - [Forward Pass](#forward-pass)
+    - [FSDP](#fsdp)
+    - [Functional API](#functional-api)
+    - [Gradient](#gradient)
+    - [JIT](#jit)
+    - [Layer](#layer)
+    - [Mixed Precision](#mixed-precision)
+    - [Model](#model)
+    - [NumPy](#numpy)
+    - [OpenVINO](#openvino)
+    - [Optimizer](#optimizer)
+    - [Parallelization](#parallelization)
+    - [Pipeline](#pipeline)
+    - [Program Transforms](#program-transforms)
+    - [Progressive Disclosure](#progressive-disclosure)
+    - [PyTree](#pytree)
+    - [scikit-learn](#scikit-learn)
+    - [Sequential Model](#sequential-model)
+    - [Tensor](#tensor)
+    - [TorchDynamo](#torchdynamo)
+    - [Training Loop](#training-loop)
+    - [Transformer](#transformer)
+    - [Vectorization](#vectorization)
+    - [XLA](#xla)
+    - [ZeRO](#zero)
 
 ---
 
@@ -162,23 +203,107 @@ transforms](#program-transforms):
 
 | Transform | Purpose |
 | --- | --- |
-| `jax.grad` | [Automatic differentiation](#autodiff) (forward and reverse mode) |
+| `jax.grad` | [Automatic differentiation](#autodiff) — reverse mode by default; `jax.jvp` for forward mode |
 | `jax.jit` | [JIT compilation](#jit) via XLA for accelerated execution |
-| `jax.vmap` | Automatic [vectorization](#vectorization) (batching) of functions |
-| `jax.pmap` | [Parallelization](#parallelization) across multiple devices |
+| `jax.vmap` | Automatic [vectorization](#vectorization) — maps a function over batch dimensions |
+| `jax.pmap` | [Parallelization](#parallelization) — maps a function across multiple devices (SPMD) |
+| `jax.shard_map` | Manual [parallelization](#parallelization) — per-device code with explicit communication collectives |
+| `jax.vjp` | Vector-Jacobian product (reverse-mode autodiff building block) |
+| `jax.jvp` | Jacobian-vector product (forward-mode autodiff) |
+| `jax.value_and_grad` | Computes both a function's value and its gradient in a single pass |
 
-JAX provides a familiar [NumPy](#numpy)-style API (`jax.numpy`) but
-requires functions to be **pure** (no side effects). State — such as model
-parameters — must be passed explicitly, which aligns naturally with functional
-programming but requires ecosystem libraries (Level 2) for convenient model
-building.
+#### How JAX transforms work: tracing and jaxprs
 
+The mechanism behind all JAX transforms is **tracing**. When a transform like
+`jax.jit` is applied to a function, JAX calls that function with special
+**tracer objects** instead of real array values. Tracers record the sequence of
+operations the function performs, without executing them. The recorded sequence
+is encoded as a **jaxpr** (JAX expression) — a simple intermediate
+representation of a functional program comprising a sequence of primitive
+operations:
+
+```python
+import jax
+import jax.numpy as jnp
+
+def selu(x, alpha=1.67, lambda_=1.05):
+    return lambda_ * jnp.where(x > 0, x, alpha * jnp.exp(x) - alpha)
+
+# Inspect the jaxpr:
+print(jax.make_jaxpr(selu)(jnp.arange(5.0)))
+```
+
+```text
+{ lambda ; a:f32[5]. let
+    b:bool[5] = gt a 0.0
+    c:f32[5] = exp a
+    d:f32[5] = mul 1.67 c
+    e:f32[5] = sub d 1.67
+    f:f32[5] = select_n b e a
+    g:f32[5] = mul 1.05 f
+  in (g,) }
+```
+
+Each transform then maps this sequence of input operations to a **transformed**
+sequence. For example, `jax.jit` compiles the jaxpr via [XLA](#xla),
+`jax.grad` applies reverse-mode differentiation rules to each primitive, and
+`jax.vmap` adds batch dimensions to every operation.
+
+> Importantly, the jaxpr does not capture side effects — there is nothing in
+> it corresponding to `print()` or `list.append()`. JAX transforms are designed
+> to understand side-effect-free (a.k.a. *functionally pure*) code.
+> — [JAX: How transformations work](https://docs.jax.dev/en/latest/jit-compilation.html)
+
+#### Pure functions and explicit state
+
+JAX requires functions to be **pure** (no side effects, deterministic output
+for a given input). State — such as model parameters and random number
+generator keys — must be passed explicitly as function arguments, not held in
+mutable global variables. This constraint is what makes composable transforms
+possible: because each function is a pure mapping from inputs to outputs, JAX
+can safely analyze, differentiate, vectorize, and compile it.
+
+This aligns naturally with functional programming but requires ecosystem
+libraries (Level 2) for convenient model building.
+
+#### Composability: the key differentiator
+
+The most powerful aspect of JAX transforms is that they are **composable** —
+you can freely nest them in any order, and they work correctly:
+
+```python
+# Compose grad, vmap, and jit:
+per_example_grads = jax.jit(jax.vmap(jax.grad(loss_fn)))
+
+# Higher-order derivatives by stacking grad:
+d2f = jax.grad(jax.grad(f))
+d3f = jax.grad(jax.grad(jax.grad(f)))
+```
+
+This composability arises because every transform takes a function and returns
+a new function with the same signature conventions. The transforms are
+orthogonal — each addresses a different concern (differentiation, compilation,
+batching, parallelism) — and their implementations are designed to be layered
+arbitrarily. The official docs demonstrate this directly:
+
+> `jax.jit` and `jax.vmap` are designed to be composable, which means you can
+> wrap a vmapped function with `jit`, or a jitted function with `vmap`, and
+> everything will work correctly.
+> — [JAX: Combining transformations](https://docs.jax.dev/en/latest/automatic-vectorization.html)
+>
 > **JAX itself is narrowly-scoped** and focuses on efficient array operations
 > and program transformations. Built around JAX is an evolving ecosystem of
 > machine learning and numerical computing tools.
 > — [JAX Documentation](https://docs.jax.dev/)
 
-**Official reference:** [JAX Documentation](https://docs.jax.dev/)
+**Official references:**
+[JAX Documentation](https://docs.jax.dev/) ·
+[Key Concepts](https://docs.jax.dev/en/latest/key-concepts.html) ·
+[Tracing](https://docs.jax.dev/en/latest/tracing.html) ·
+[JIT Compilation](https://docs.jax.dev/en/latest/jit-compilation.html) ·
+[Automatic Vectorization](https://docs.jax.dev/en/latest/automatic-vectorization.html) ·
+[Automatic Differentiation](https://docs.jax.dev/en/latest/automatic-differentiation.html) ·
+[Parallel Programming](https://docs.jax.dev/en/latest/sharded-computation.html)
 
 ---
 
@@ -844,11 +969,69 @@ sklearn pipelines by providing an sklearn-compatible interface.
 
 ### Program Transforms
 
-JAX's core paradigm: composable function transformations that operate on
-Python functions. Examples include `jax.grad` (differentiation), `jax.jit`
-(compilation), `jax.vmap` ([vectorization](#vectorization)), and
-`jax.pmap` ([parallelization](#parallelization)). These can be freely
-composed — e.g., `jax.jit(jax.vmap(jax.grad(f)))`.
+In JAX, a **program transform** (or simply a **transformation**) is a
+higher-order function that takes a Python function as input and returns a new,
+transformed function as output. The JAX glossary defines them precisely:
+
+> **transformation** — A higher-order function: that is, a function that takes
+> a function as input and outputs a transformed function. Examples in JAX
+> include `jax.jit`, `jax.vmap`, and `jax.grad`.
+> — [JAX Glossary](https://docs.jax.dev/en/latest/glossary.html)
+
+The core transforms are:
+
+- **`jax.grad`** — Computes [gradients](#gradient) via reverse-mode
+  [automatic differentiation](#autodiff). Given a scalar-valued function `f`,
+  `jax.grad(f)` returns a new function that evaluates $\nabla f$. Can be
+  stacked for higher-order derivatives:
+  `jax.grad(jax.grad(f))` computes $f''$.
+- **`jax.jit`** — [Just-in-time compiles](#jit) a function via [XLA](#xla).
+  JAX traces the function with abstract tracer objects to extract a **jaxpr**
+  (intermediate representation), which is then compiled to optimized machine
+  code for the target hardware (CPU/GPU/TPU).
+- **`jax.vmap`** — Automatic [vectorization](#vectorization). Transforms a
+  function that operates on a single example into one that operates on a batch,
+  by automatically adding batch dimensions to every operation. Eliminates the
+  need to manually rewrite functions for batched inputs.
+- **`jax.pmap`** — SPMD [parallelization](#parallelization). Maps a function
+  across multiple devices, running the same computation on different shards of
+  data in parallel.
+- **`jax.shard_map`** — Manual parallelism. You write per-device code and
+  use explicit communication collectives (e.g., `jax.lax.psum`).
+- **`jax.jvp`** / **`jax.vjp`** — Lower-level transforms for forward-mode
+  (Jacobian-vector product) and reverse-mode (vector-Jacobian product)
+  autodiff respectively. `jax.grad` is built on `jax.vjp`.
+- **`jax.value_and_grad`** — Computes both a function's return value and its
+  gradient in a single pass.
+
+**Composability** is the defining feature: transforms can be freely nested
+in any order, and they work correctly together:
+
+```python
+# Compile a vectorized, differentiated function in one expression:
+fast_batched_grad = jax.jit(jax.vmap(jax.grad(loss_fn)))
+```
+
+This works because (1) every transform takes and returns a function with the
+same calling convention, (2) the transforms are orthogonal (each addresses
+a different concern), and (3) JAX functions must be
+*pure* — no side effects — so transforms can safely
+analyze and rewrite them.
+
+All transforms rely on a shared mechanism: **tracing**. When a transform is
+applied, JAX calls the function with tracer objects that record the sequence of
+primitive operations into a **jaxpr** (JAX expression). Each transform then
+maps this recorded sequence to a transformed sequence — compilation for `jit`,
+differentiation rules for `grad`, batched dimensions for `vmap`, etc.
+
+**Official references:**
+[Key Concepts: Transformations](https://docs.jax.dev/en/latest/key-concepts.html) ·
+[Glossary](https://docs.jax.dev/en/latest/glossary.html) ·
+[Tracing](https://docs.jax.dev/en/latest/tracing.html) ·
+[JIT Compilation](https://docs.jax.dev/en/latest/jit-compilation.html) ·
+[Automatic Vectorization](https://docs.jax.dev/en/latest/automatic-vectorization.html) ·
+[Automatic Differentiation](https://docs.jax.dev/en/latest/automatic-differentiation.html) ·
+[Parallel Programming](https://docs.jax.dev/en/latest/sharded-computation.html)
 
 ### Progressive Disclosure
 
