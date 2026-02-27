@@ -1,0 +1,150 @@
+# ==============================================================================
+# Deep Learning with Python (3rd Ed.) — Chollet
+# Mac Apple Silicon (M1/M2/M3/M4) — GPU-accelerated setup
+#
+# Target Python: 3.12.9  (via pyenv + pyenv-virtualenv)
+#
+# Setup from scratch:
+#   pyenv install 3.12.9
+#   pyenv virtualenv 3.12.9 dl-chollet-3rd
+#   pyenv local dl-chollet-3rd
+#   pip install --upgrade pip
+#   pip install -r requirements.txt
+#   pip uninstall tensorflow-metal -y   # see "WHY NO tensorflow-metal?" below
+#
+# Strip notebook outputs from git (requires nbstripout via pipx):
+#   pipx install nbstripout              # one-time, global install
+#   nbstripout --install                  # per-repo git filter
+#   git config filter.nbstripout.extrakeys \
+#     'metadata.kernelspec metadata.language_info metadata.widgets cell.metadata.scrolled cell.metadata.collapsed'
+#
+# Recreating the env (if needed):
+#   pyenv virtualenv-delete dl-chollet-3rd -f
+#   pyenv virtualenv 3.12.9 dl-chollet-3rd
+#   pyenv local dl-chollet-3rd
+#   pip install --upgrade pip
+#   pip install -r requirements.txt
+#   pip uninstall tensorflow-metal -y   # see "WHY NO tensorflow-metal?" below
+#
+# Verify:
+#   python -c "import tensorflow as tf; print('TF', tf.__version__)"
+#   python -c "import jax; print('JAX', jax.__version__); print(jax.devices())"
+#   python -c "import torch; print('PyTorch', torch.__version__); print('MPS:', torch.backends.mps.is_available())"
+#   python -c "import keras; print('Keras', keras.__version__)"
+#
+# Why Python 3.12?
+#   TensorFlow macOS ARM64 wheels are reliably published for 3.12.
+#   Apple's jax-metal plugin follows TF's platform support, so 3.12
+#   is the most conservative choice that keeps all three backends
+#   (JAX, TF, PyTorch) working. Python 3.13+ may work for
+#   PyTorch/JAX alone, but TF + Apple Metal plugin wheel
+#   availability is not guaranteed on 3.13/3.14.
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+# Keras 3 Ecosystem
+#
+# Default backend in most notebooks: JAX
+# Some cells switch to tensorflow or torch via %%backend magic
+# keras-hub (merger of keras-nlp + keras-cv) provides pretrained models
+# used heavily in chapters 8–18 (Xception, SAM, RetinaNet, Gemma, SD3, etc.)
+# ------------------------------------------------------------------------------
+keras==3.13.2
+keras-hub==0.26.0
+keras-tuner==1.4.8
+
+
+# ------------------------------------------------------------------------------
+# JAX Backend — Apple Silicon GPU
+#
+# IMPORTANT: jax, jaxlib, and jax-metal must be a compatible trio.
+# Apple's jax-metal docs provide a compatibility table mapping
+# jax-metal versions to supported jaxlib versions. Do NOT mix
+# incompatible versions or JAX will silently fall back to CPU.
+#
+# See: https://pypi.org/project/jax-metal/
+# ------------------------------------------------------------------------------
+jax==0.4.38
+jaxlib==0.4.38
+jax-metal==0.1.1
+
+
+# ------------------------------------------------------------------------------
+# TensorFlow — CPU only (no tensorflow-metal)
+#
+# TF is required even when training with JAX, because tf.data pipelines
+# are used for data loading throughout chapters 8–17, and keras.datasets
+# (MNIST, CIFAR, etc.) depends on it.
+#
+# GPU acceleration is NOT needed for TF in this book:
+#   - All GPU-heavy training runs through JAX + jax-metal (primary backend)
+#   - PyTorch GPU cells use MPS (built-in)
+#   - TF is only used for: tf.data pipelines (CPU), keras.datasets (downloads),
+#     and a handful of tf.GradientTape demos (ch. 3, 10) that run fine on CPU
+#
+# WHY NO tensorflow-metal?
+#   As of Feb 2026, tensorflow-metal==1.2.0 (the only version with a
+#   Python 3.12 wheel) has a broken rpath: its libmetal_plugin.dylib
+#   expects _pywrap_tensorflow_internal.so at a Bazel-generated relative
+#   path (_solib_darwin_arm64/...) that does not exist in TF 2.18 or 2.20's
+#   installed package layout. tensorflow-metal==1.1.0 has no 3.12 wheel.
+#   This is an Apple-side packaging bug with no workaround.
+#   Dropping tensorflow-metal has zero functional impact on these notebooks.
+# ------------------------------------------------------------------------------
+tensorflow==2.20.0
+
+
+# ------------------------------------------------------------------------------
+# PyTorch Backend
+#
+# MPS (Metal Performance Shaders) GPU support is built into torch.
+# No extra plugin required for Apple Silicon GPU acceleration.
+# ------------------------------------------------------------------------------
+torch==2.10.0
+torchvision==0.25.0
+
+
+# ------------------------------------------------------------------------------
+# Numerical & Data Processing
+#
+# NumPy 2.x: TF 2.20, JAX 0.4.36, PyTorch 2.10, and Keras 3.13 all
+# target numpy 2.x in their build/test matrices. Using 2.x ensures
+# consistent binary ABI across all wheels.
+# ------------------------------------------------------------------------------
+numpy==2.4.2
+scipy==1.15.2
+
+
+# ------------------------------------------------------------------------------
+# Visualization & Image Processing
+# ------------------------------------------------------------------------------
+matplotlib==3.10.8
+pillow==12.1.1
+
+
+# ------------------------------------------------------------------------------
+# NLP Utilities
+# regex: used directly in chapter 14 (tokenizer implementations)
+# sentencepiece: required by keras-hub's SentencePieceTokenizer (chapter 16)
+# ------------------------------------------------------------------------------
+regex==2024.11.6
+sentencepiece==0.2.0
+
+
+# ------------------------------------------------------------------------------
+# Kaggle integration
+# Chapters 8, 9, 16 download competition/model data via kagglehub
+# ------------------------------------------------------------------------------
+kagglehub==1.0.0
+
+
+# ------------------------------------------------------------------------------
+# Notebook Environment
+# ------------------------------------------------------------------------------
+jupyter==1.1.1
+jupyterlab==4.5.5
+qtconsole==5.7.1
+PyQt5==5.15.11
+ipython==9.10.0
+ipywidgets==8.1.5
