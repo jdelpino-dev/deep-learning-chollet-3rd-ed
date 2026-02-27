@@ -2,11 +2,11 @@
 # Deep Learning with Python (3rd Ed.) — Chollet
 # Mac Apple Silicon (M1/M2/M3/M4) — GPU-accelerated setup
 #
-# Target Python: 3.12.9  (via pyenv + pyenv-virtualenv)
+# Target Python: 3.12.12  (via pyenv + pyenv-virtualenv)
 #
 # Setup from scratch:
-#   pyenv install 3.12.9
-#   pyenv virtualenv 3.12.9 dl-chollet-3rd
+#   pyenv install 3.12.12
+#   pyenv virtualenv 3.12.12 dl-chollet-3rd
 #   pyenv local dl-chollet-3rd
 #   pip install --upgrade pip
 #   pip install -r requirements.txt
@@ -20,7 +20,7 @@
 #
 # Recreating the env (if needed):
 #   pyenv virtualenv-delete dl-chollet-3rd -f
-#   pyenv virtualenv 3.12.9 dl-chollet-3rd
+#   pyenv virtualenv 3.12.12 dl-chollet-3rd
 #   pyenv local dl-chollet-3rd
 #   pip install --upgrade pip
 #   pip install -r requirements.txt
@@ -63,7 +63,15 @@ keras-tuner==1.4.8
 # jax-metal versions to supported jaxlib versions. Do NOT mix
 # incompatible versions or JAX will silently fall back to CPU.
 #
+# jax-metal 0.1.1 (latest as of Feb 2026, released Oct 2024) requires
+# jax >= 0.4.34 with jaxlib == jax. We pin 0.4.38 — within the supported
+# range but close enough to the plugin's last-tested baseline. Newer JAX
+# versions can work by setting ENABLE_PJRT_COMPATIBILITY=1 (per Apple's
+# docs), but since the plugin hasn't been updated in 16+ months and is
+# explicitly experimental, staying near the minimum reduces breakage risk.
+#
 # See: https://pypi.org/project/jax-metal/
+# See: https://developer.apple.com/metal/jax/
 # ------------------------------------------------------------------------------
 jax==0.4.38
 jaxlib==0.4.38
