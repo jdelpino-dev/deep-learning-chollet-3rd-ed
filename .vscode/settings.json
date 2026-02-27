@@ -1,0 +1,9 @@
+{
+    "notebook.diff.ignoreMetadata": true,
+    "triggerTaskOnSave.tasks": {
+        "nbstripout on save": [
+            "**/*.ipynb"
+        ]
+    },
+    "triggerTaskOnSave.on": true
+}
