@@ -11,8 +11,14 @@ a NumPy array, or a boolean mask) instead of a single integer or a slice.
 import numpy as np
 
 arr = np.arange(10)          # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# With a NumPy array
 indices = np.array([1, 3, 7])
 arr[indices]                  # → array([1, 3, 7])  ← fancy indexing
+
+# A plain Python list works identically
+indices = [1, 3, 7]
+arr[indices]                  # → array([1, 3, 7])  ← also fancy indexing
 ```
 
 Compare this with **basic indexing**, which uses single integers or slices and
@@ -27,7 +33,7 @@ Fancy indexing **always returns a copy on read**, not a view. This distinction
 matters for performance and mutation semantics.
 
 > **Read vs. write — the easy trap:**
-> 
+>
 > - **Reading** via fancy indexing gives you a *copy* — modifying it does **not**
 >   affect the original.
 > - **Writing** via fancy indexing (assignment) *does* modify the original
@@ -62,7 +68,7 @@ print(arr)                 # → [0, 0, 2, 0, 4, 5, 6, 0, 8, 9]  ← original ch
 | **Array indexing** | Used when emphasizing that the index itself is an array |
 | **Indirect indexing** | Borrowed from low-level programming (pointer tables, gather/scatter) |
 | **Gather / Scatter** | The GPU and framework equivalent (`torch.gather`, `tf.gather`, `jax.lax.gather`) |
-| **Integer array indexing** | When the index array contains integers (as opposed to booleans) |
+| **Integer array indexing** | When the index list or array contains integers (as opposed to booleans) |
 | **Boolean (mask) indexing** | The boolean sub-variant of advanced indexing |
 
 > **Rule of thumb:** If the thing inside the brackets is an `ndarray`, a Python
@@ -74,7 +80,7 @@ print(arr)                 # → [0, 0, 2, 0, 4, 5, 6, 0, 8, 9]  ← original ch
 
 ### 1. Integer Array Indexing
 
-You supply one or more arrays of **integer positions**.
+You supply one or more **lists or arrays** of integer positions. NumPy accepts both interchangeably — a plain Python list `[1, 3, 7]` and `np.array([1, 3, 7])` produce identical results.
 
 ```python
 arr = np.array([10, 20, 30, 40, 50])
@@ -91,8 +97,8 @@ arr[[-1, -2]]                # → array([50, 40])
 
 #### Multi-dimensional integer array indexing
 
-With 2-D (or higher) arrays, you provide one index array **per axis**. The
-arrays are broadcast together, and each resulting element is selected
+With 2-D (or higher) arrays, you provide one index list or array **per axis**. The
+collections are broadcast together, and each resulting element is selected
 coordinate-wise:
 
 ```python
@@ -296,7 +302,7 @@ selected = sequence_data[:, key_timesteps, :]     # (batch, 3, features)
 
 ### 7. Shuffle and Permutation
 
-Shuffling a dataset is fancy indexing with a permuted index array:
+Shuffling a dataset is fancy indexing with a permuted index array (or list):
 
 ```python
 perm = np.random.permutation(len(x_train))
