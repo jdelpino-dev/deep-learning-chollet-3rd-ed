@@ -137,9 +137,7 @@ array ([tensor](#tensor)) operations, [automatic
 differentiation](#autodiff), hardware acceleration (GPU/TPU), and — in
 JAX's case — composable [program transforms](#program-transforms).
 
-These engines are **not typically used directly** for building full models by most
-practitioners; instead, they serve as the foundation that Level 2 tools build
-upon. However, they remain accessible for researchers who need maximum control.
+These engines are the foundation on which higher-level modeling and training interfaces are built. In TensorFlow, most practitioners primarily use higher-level APIs such as Keras, while TensorFlow Core remains available for users who need lower-level control. In PyTorch, however, many practitioners work directly with the core framework APIs—including torch.nn.Module—so the boundary between “core engine” and “high-level model building” is less sharp. JAX likewise exposes its core transforms directly, even when many projects adopt ecosystem libraries for model structure and training utilities.
 
 ### TensorFlow
 
