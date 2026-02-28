@@ -31,7 +31,7 @@ for performance and mutation semantics.
 ## All the Names It Goes By
 
 | Name | Context |
-|---|---|
+| --- | --- |
 | **Fancy indexing** | The most common informal name in the NumPy community |
 | **Advanced indexing** | The official term in the [NumPy documentation](https://numpy.org/doc/stable/user/basics.indexing.html#advanced-indexing) |
 | **Array indexing** | Used when emphasizing that the index itself is an array |
@@ -285,7 +285,7 @@ Every major framework provides GPU-accelerated fancy indexing under different
 names:
 
 | NumPy | PyTorch | TensorFlow | JAX |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | `a[idx]` (read) | `torch.gather`, `a[idx]` | `tf.gather` | `jax.numpy` indexing, `jax.lax.gather` |
 | `a[idx] = val` (write) | `scatter_`, `index_put_` | `tf.tensor_scatter_nd_update` | `a.at[idx].set(val)` |
 | `np.add.at(a, idx, val)` | `scatter_add_` | `tf.tensor_scatter_nd_add` | `a.at[idx].add(val)` |
@@ -299,7 +299,7 @@ model.
 ## Performance Notes
 
 | Aspect | Basic indexing (slices) | Fancy indexing |
-|---|---|---|
+| --- | --- | --- |
 | **Returns** | View (shared memory) | Copy (new memory) |
 | **Speed** | Faster (no data movement) | Slower (memory allocation + copy) |
 | **GPU equivalent** | Strided access | Gather/Scatter kernels |
