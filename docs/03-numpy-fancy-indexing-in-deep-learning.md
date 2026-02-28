@@ -23,8 +23,33 @@ arr[2]      # single integer  → 2
 arr[1:4]    # slice           → array([1, 2, 3])  (view, no copy)
 ```
 
-Fancy indexing **always returns a copy**, not a view. This distinction matters
-for performance and mutation semantics.
+Fancy indexing **always returns a copy on read**, not a view. This distinction
+matters for performance and mutation semantics.
+
+> **Read vs. write — the easy trap:**
+> 
+> - **Reading** via fancy indexing gives you a *copy* — modifying it does **not**
+>   affect the original.
+> - **Writing** via fancy indexing (assignment) *does* modify the original
+>   in-place — no intermediate copy is involved.
+
+```python
+arr = np.arange(10)        # [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+# READ: fancy indexing → copy
+fancy = arr[[1, 3, 7]]
+fancy[0] = 999
+print(arr[1])              # → 1  ← original unchanged (copy, not a view)
+
+# READ: slice → view
+sliced = arr[1:4]
+sliced[0] = 999
+print(arr[1])              # → 999  ← original changed (it IS a view)
+
+# WRITE: fancy indexing assignment → modifies original directly
+arr[[1, 3, 7]] = 0
+print(arr)                 # → [0, 0, 2, 0, 4, 5, 6, 0, 8, 9]  ← original changed
+```
 
 ---
 
@@ -369,12 +394,14 @@ Fancy indexing **always copies** on read (unlike slices, which return views).
 This allocates new memory — but the cost is usually **dwarfed** by downstream
 computation.
 
-| Aspect | Basic indexing (slices) | Fancy indexing |
+| Aspect | Slice `a[1:4]` | Fancy indexing `a[[1,3,7]]` |
 | --- | --- | --- |
-| **Returns** | View (shared memory) | Copy (new memory) |
-| **Speed** | Faster (no data movement) | Slower (allocation + copy) |
-| **GPU equivalent** | Strided access | Gather / Scatter kernels |
-| **Mutation** | Mutates original via view | Assignment mutates original; reads are independent copies |
+| **Read result** | View (shared memory, no copy) | Copy (new memory allocated) |
+| **Read: mutate result** | Mutates original ✅ | Does NOT affect original ❌ |
+| **Write `a[...] = val`** | Mutates original ✅ | Mutates original ✅ |
+| **Read speed** | Faster (no data movement) | Slower (allocation + copy) |
+| **GPU read equivalent** | Strided access | Gather kernel |
+| **GPU write equivalent** | Strided write | Scatter kernel |
 
 In ML contexts the copy cost is trivial compared to forward passes, matrix
 multiplications, convolutions, and loss computation. The overhead only matters
