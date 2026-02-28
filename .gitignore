@@ -1,1 +1,117 @@
+# Python version management
 .python-version
+pyenv.version
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Python packages
+*.egg-info/
+*.egg
+dist/
+build/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter notebook checkpoints and cache
+.ipynb_checkpoints/
+.jupyter/
+*/.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Jupyter specific
+.jupyterlab
+.jupyterlab-settings/
+
+# IDE and Editor files
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+.eclipse
+.project
+.pydevproject
+
+# Editor temporary files
+*.tmp
+*.bak
+*backup*
+
+# macOS specific
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Data and model files (typically large)
+data/
+datasets/
+*.csv
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.npy
+*.npz
+*.pt
+*.pth
+*.ckpt
+models/
+checkpoints/
+weights/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+.env.stag
+.env.*.stag
+.env.staging
+.env.*.staging
+.env.prod
+.env.*.prod
+.env.production
+.env.*.production
+
+# PyTorch/TensorFlow specific
+wandb/
+lightning_logs/
+runs/
+.lightning/
+
+# Package manager lock files (optional - uncomment if needed)
+# poetry.lock
+# Pipfile.lock
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS generated files
+.env~
+*.orig
