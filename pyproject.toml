@@ -3,4 +3,29 @@ name = "deep-learning-chollet-3rd-ed"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.12.13"
-dependencies = []
+dependencies = [
+    "ipython",
+    "ipywidgets",
+    "jax==0.4.38",
+    "jax-metal==0.1.1",
+    "jaxlib==0.4.38",
+    "jupyter",
+    "jupyterlab",
+    "kagglehub",
+    "keras",
+    "keras-hub",
+    "keras-rs",
+    "keras-tuner",
+    "matplotlib",
+    "numpy",
+    "pillow",
+    "pyqt5",
+    "qtconsole",
+    "regex",
+    "scikit-learn",
+    "scipy",
+    "sentencepiece",
+    "tensorflow==2.20.0",
+    "torch",
+    "torchvision",
+]
