@@ -8,60 +8,61 @@ locally with GPU acceleration on Apple Silicon.
 ## Prerequisites
 
 - **macOS** on Apple Silicon (M1/M2/M3/M4)
-- [pyenv](https://github.com/pyenv/pyenv) + [pyenv-virtualenv](https://github.com/pyenv/pyenv-virtualenv)
-- [pipx](https://pypa.github.io/pipx/) (for global dev tools)
+- [uv](https://docs.astral.sh/uv/) — manages Python installation, virtualenv, and dependencies
+- [direnv](https://direnv.net/) (recommended) — auto-activates `.venv` via `.envrc` on `cd`
+- [pipx](https://pypa.github.io/pipx/) (for global dev tools like `nbstripout`)
 
 ### Shell config (`~/.zshrc`)
 
 Make sure these lines are present:
 
 ```bash
-export PYENV_ROOT="$HOME/.pyenv"
-[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+# uv
+export PATH="$HOME/.local/bin:$PATH"
+
+# direnv (optional but recommended)
+eval "$(direnv hook zsh)"
 ```
 
 ---
 
-## 1. Create the Python environment
+## 1. Sync the environment
 
 ```bash
-pyenv install 3.12.9
-pyenv virtualenv 3.12.9 dl-chollet-3rd
-pyenv local dl-chollet-3rd
+uv sync
 ```
 
-`pyenv local` writes a `.python-version` file in the project root. With
-`pyenv virtualenv-init` in your shell config, the virtualenv auto-activates
-whenever you `cd` into this directory.
+That's it. `uv` reads `pyproject.toml`, resolves against `uv.lock`, creates
+`.venv` in the project root, and installs all dependencies. The Python version
+is pinned in `.python-version` (`3.12.13`) — uv installs it automatically if
+it isn't available locally.
+
+If direnv is set up, the `.venv` activates automatically when you `cd` into
+the project. Otherwise, activate it manually:
+
+```bash
+source .venv/bin/activate
+```
 
 ### Why Python 3.12?
 
 - TensorFlow macOS ARM64 wheels are reliably published for 3.12.
 - Apple's `jax-metal` plugin has tested wheels for 3.12.
 - Python 3.13+ may work for PyTorch/JAX alone, but TF + Apple Metal plugin
-  wheel availability is not guaranteed on 3.13/3.14 as of Feb 2026.
+  wheel availability is not guaranteed on 3.13/3.14 as of early 2026.
 
----
+### Note on `tensorflow-metal`
 
-## 2. Install dependencies
-
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-pip uninstall tensorflow-metal -y
-```
-
-### Why uninstall `tensorflow-metal`?
-
-TensorFlow 2.20 on macOS pulls in `tensorflow-metal` as a dependency.
-However, as of Feb 2026, `tensorflow-metal==1.2.0` (the only version with a
+TensorFlow 2.20 on macOS pulls in `tensorflow-metal` as a transitive
+dependency. However, `tensorflow-metal==1.2.0` (the only version with a
 Python 3.12 wheel) has a **broken rpath**: its `libmetal_plugin.dylib` expects
 `_pywrap_tensorflow_internal.so` at a Bazel-generated relative path
 (`_solib_darwin_arm64/...`) that does not exist in TF 2.18 or 2.20's installed
 package layout. `tensorflow-metal==1.1.0` has no 3.12 wheel. This is an
 Apple-side packaging bug with no workaround.
+
+uv's resolver correctly excludes it — `tensorflow-metal` does not appear in
+`uv.lock` and is never installed. No extra configuration is needed.
 
 **This has zero functional impact on these notebooks:**
 
@@ -72,7 +73,7 @@ Apple-side packaging bug with no workaround.
 
 ---
 
-## 3. Verify the installation
+## 2. Verify the installation
 
 ```bash
 python -c "import tensorflow as tf; print('TF', tf.__version__)"
@@ -85,7 +86,7 @@ Expected output (versions may differ slightly):
 
 ```plaintext
 TF 2.20.0
-JAX 0.4.36
+JAX 0.4.38
 [METAL(id=0)]
 PyTorch 2.10.0
 MPS: True
@@ -160,12 +161,8 @@ while working. Git just never sees them.
 If the env gets corrupted or you need a clean slate:
 
 ```bash
-pyenv virtualenv-delete dl-chollet-3rd -f
-pyenv virtualenv 3.12.9 dl-chollet-3rd
-pyenv local dl-chollet-3rd
-pip install --upgrade pip
-pip install -r requirements.txt
-pip uninstall tensorflow-metal -y
+rm -rf .venv
+uv sync
 ```
 
 ---
@@ -174,7 +171,7 @@ pip uninstall tensorflow-metal -y
 
 | Backend    | Version | GPU Acceleration        | Role in notebooks                     |
 | ---------- | ------- | ----------------------- | ------------------------------------- |
-| JAX        | 0.4.36  | Metal (via `jax-metal`) | Primary Keras training backend        |
+| JAX        | 0.4.38  | Metal (via `jax-metal`) | Primary Keras training backend        |
 | PyTorch    | 2.10.0  | MPS (built-in)          | `%%backend torch` cells               |
 | TensorFlow | 2.20.0  | CPU only                | `tf.data` pipelines, `keras.datasets` |
 | Keras      | 3.13.2  | Via JAX Metal           | Multi-backend framework               |
