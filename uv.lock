@@ -1275,7 +1275,7 @@ wheels = [
 
 [[package]]
 name = "keras"
-version = "3.13.2"
+version = "3.14.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "absl-py" },
@@ -1287,14 +1287,14 @@ dependencies = [
     { name = "packaging" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/09/e9/400582e5f3dbd815d2a373f7de7717dd1bc8349274e9ac1b9ac47410b123/keras-3.13.2.tar.gz", hash = "sha256:62f0123488ac87c929c988617e14f293f7bc993811837d08bb37eff77adc85a9", size = 1155875, upload-time = "2026-01-30T00:35:13.796Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/88/ce/47874047a49eedc2a5d3b41bc4f1f572bb637f51e4351ef3538e49a63800/keras-3.14.0.tar.gz", hash = "sha256:86fcf8249a25264a566ac393c287c7ad657000e5e62615dcaad4b3472a17aeda", size = 1263098, upload-time = "2026-04-03T01:42:16.386Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/28/b5/ea85873abc99dc64a7a27ff1a8dbfdc7dbb57d4e5d1a423abc11217af4f1/keras-3.13.2-py3-none-any.whl", hash = "sha256:14b2afc0f9c636cc295d28efc36aae42fc52e7b892c950eec33f3befe4d22fb5", size = 1513769, upload-time = "2026-01-30T00:35:09.664Z" },
+    { url = "https://files.pythonhosted.org/packages/c0/20/78d26f81115d570bdf0e57d19b81de9ad8aa55ddb68eb10c8f0699fccb63/keras-3.14.0-py3-none-any.whl", hash = "sha256:19ce94b798caaba4d404ab6ef4753b44219170e5c2868156de8bb0494a260114", size = 1627362, upload-time = "2026-04-03T01:42:11.606Z" },
 ]
 
 [[package]]
 name = "keras-hub"
-version = "0.26.0"
+version = "0.27.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "absl-py" },
@@ -1306,9 +1306,9 @@ dependencies = [
     { name = "rich" },
     { name = "tensorflow-text", marker = "sys_platform != 'win32'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/30/63/2372743505b57c5c29ea8ffdd9c7b9152e6d8ffdc83a11d0f0a31c0c9b66/keras_hub-0.26.0.tar.gz", hash = "sha256:cf04da1f66486e9276c063ea7ddfd25b8de5741dddf5d69bf8e2c742ebcb8fae", size = 885874, upload-time = "2026-02-06T06:58:00.614Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/16/0f/7a61044dc3b23113f5f23f52da3fcb80838b48487e3a5ec570cbd7e1e391/keras_hub-0.27.1.tar.gz", hash = "sha256:78b8329561da63c16f36a9f9327f9bc23923eea7c5aa772a89200f69b605854c", size = 1003149, upload-time = "2026-04-03T01:21:23.566Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cd/39/79eed7410a03d99b48d7ea23646da651e59e2bbd3a6d7f9d3bad92a627e8/keras_hub-0.26.0-py3-none-any.whl", hash = "sha256:2598f9d770503427e6cbc5bfa7f7d368cf28dd23097485ddce2e7e2bac128829", size = 1251679, upload-time = "2026-02-06T06:57:58.438Z" },
+    { url = "https://files.pythonhosted.org/packages/4c/93/0a439a7887093f1e1bc78625b1d3da1f2a0a91719dfbc85245695c326e44/keras_hub-0.27.1-py3-none-any.whl", hash = "sha256:32702501ac2dbace27fa35422702ed98867d192919e90e4512fe901519dfefe1", size = 1404357, upload-time = "2026-04-03T01:21:21.663Z" },
 ]
 
 [[package]]
