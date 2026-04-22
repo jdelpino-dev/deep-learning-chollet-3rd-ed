@@ -2,7 +2,7 @@
 name = "deep-learning-chollet-3rd-ed"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.12.13"
+requires-python = "==3.12.*"
 dependencies = [
     "ipython",
     "ipywidgets",
