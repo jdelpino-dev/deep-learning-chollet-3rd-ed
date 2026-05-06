@@ -1124,7 +1124,7 @@ wheels = [
 
 [[package]]
 name = "keras-hub"
-version = "0.28.0"
+version = "0.29.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "absl-py" },
@@ -1138,9 +1138,9 @@ dependencies = [
     { name = "tensorflow-text", marker = "sys_platform != 'win32'" },
     { name = "tokenizers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/bc/fc42a21290b6eb4a1846778c845154832541b6907546654b8787f75a7af8/keras_hub-0.28.0.tar.gz", hash = "sha256:4c2acfd34dae14ac1d842c4253b6229194caded59bf2b5cfbd687cab0d2d52ca", size = 1103390, upload-time = "2026-04-16T18:22:51.326Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d1/e5/f6b3efbeac532b654c18e292de7e3d71b69def5dd44030f7c387435466bb/keras_hub-0.29.0.tar.gz", hash = "sha256:abe1f572d1814ba5bcbfd1c7967b02319a49a82eafebdc6e885dcfc5e8c93c47", size = 1105893, upload-time = "2026-05-05T19:10:05.189Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/7d/ae/e4f60a5e37e72ddd0cfec6b1c9abf8e1e96d9937b327f2b846b2650ad11c/keras_hub-0.28.0-py3-none-any.whl", hash = "sha256:a28cb601f7fffb7f28add1bae8110459fc3ac7d9e2159453dfbda9e97271fc87", size = 1525623, upload-time = "2026-04-16T18:22:49.514Z" },
+    { url = "https://files.pythonhosted.org/packages/56/f0/35dbcd87c21011fae27f58fa5555dbf5fef530f4191ac463f512e4eeb5fc/keras_hub-0.29.0-py3-none-any.whl", hash = "sha256:c063a798246fa8c8df218b5159492ba275461df51ab6638d5ae2085fab80bec0", size = 1524432, upload-time = "2026-05-05T19:10:03.798Z" },
 ]
 
 [[package]]
