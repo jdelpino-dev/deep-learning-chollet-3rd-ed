@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Automatically strip notebook outputs after merging into master.
+# This prevents the nbstripout global filter from making notebooks
+# appear perpetually modified after pulling upstream changes.
+
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ "$branch" != "master" ]; then
+  exit 0
+fi
+
+if ! command -v nbstripout &>/dev/null; then
+  echo "post-merge: nbstripout not found, skipping notebook cleanup"
+  exit 0
+fi
+
+notebooks=$(git ls-files '*.ipynb')
+if [ -z "$notebooks" ]; then
+  exit 0
+fi
+
+echo "post-merge: stripping notebook outputs..."
+echo "$notebooks" | xargs nbstripout
+
+if ! git diff --quiet -- '*.ipynb'; then
+  git add -- '*.ipynb'
+  git commit -m "chore: strip notebook outputs after upstream sync"
+  echo "post-merge: committed stripped notebooks"
+else
+  echo "post-merge: notebooks already clean, nothing to commit"
+fi
